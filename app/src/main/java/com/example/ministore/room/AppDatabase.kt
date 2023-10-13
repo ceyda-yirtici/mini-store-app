@@ -7,5 +7,5 @@ import com.example.myapplication.room.CartProductDao
 
 @Database(entities = [CartProduct::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun noteDao(): CartProductDao
+    abstract fun productDao(): CartProductDao
 }

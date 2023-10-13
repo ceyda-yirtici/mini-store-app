@@ -1,15 +1,18 @@
 package com.example.ministore.ui
 
-import android.os.Handler
-import android.os.Looper
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.ministore.R
 import com.example.ministore.model.Product
+import com.example.ministore.ui.products.ProductsFragment
 
-class ProductRecyclerAdapter( ) : RecyclerView.Adapter<ProductRecyclerAdapter.ProductViewHolder>() {
+class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.ProductViewHolder>() {
 
     private var productList: ArrayList<Product> = arrayListOf()
 
@@ -26,8 +29,17 @@ class ProductRecyclerAdapter( ) : RecyclerView.Adapter<ProductRecyclerAdapter.Pr
 
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        @SuppressLint("SetTextI18n")
         fun bind(product: Product) {
+            val photo: ImageView = itemView.findViewById(R.id.photoGrid)
+            val name: TextView = itemView.findViewById(R.id.title)
+            val price: TextView = itemView.findViewById(R.id.price)
+            val cartProductAmount: TextView = itemView.findViewById(R.id.cartProductAmount)
 
+            Glide.with(photo).load(product.imageUrl).into(photo)
+            name.text = product.name
+            price.text = product.currency + product.price
+            cartProductAmount.text = "0"
         }
 
     }

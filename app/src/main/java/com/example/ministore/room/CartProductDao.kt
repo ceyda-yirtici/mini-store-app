@@ -13,8 +13,6 @@ interface CartProductDao {
     fun getAll(): List<CartProduct>
 
 
-    @Query("SELECT product_id FROM cart_table")
-    fun getAllByIds(): List<String>
 
     @Query("SELECT * FROM cart_table WHERE product_id = :productId")
     fun get(productId:Int): CartProduct
