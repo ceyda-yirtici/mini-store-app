@@ -34,7 +34,7 @@ class NetworkModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("")
+            .baseUrl("https://desolate-shelf-18786.herokuapp.com")
             .build()
     }
 

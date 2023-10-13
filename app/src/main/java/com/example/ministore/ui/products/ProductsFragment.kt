@@ -6,4 +6,5 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProductsFragment: Fragment(R.layout.fragment_products)  {
+
 }

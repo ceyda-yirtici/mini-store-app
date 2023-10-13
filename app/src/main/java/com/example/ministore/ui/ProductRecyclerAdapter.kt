@@ -26,7 +26,7 @@ class ProductRecyclerAdapter( ) : RecyclerView.Adapter<ProductRecyclerAdapter.Pr
 
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(detail: Product) {
+        fun bind(product: Product) {
 
         }
 
