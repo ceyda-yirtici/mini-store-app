@@ -16,6 +16,7 @@ import com.example.ministore.databinding.FragmentProductsBinding
 import com.example.ministore.model.Product
 import com.example.ministore.ui.CartManager
 import com.example.ministore.ui.ProductRecyclerAdapter
+import com.example.ministore.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,10 +47,10 @@ class ProductsFragment: Fragment(R.layout.fragment_products)  {
     private fun initView(view: View) {
         view.apply {
 
-            val layoutManager: LinearLayoutManager? = GridLayoutManager(requireContext(), 3)
+            val layoutManager: LinearLayoutManager? = GridLayoutManager(requireContext(), Constants.GRID_SPAN_COUNT)
             binding.recycler.layoutManager = layoutManager
             binding.recycler.adapter = productRecyclerAdapter
-            productRecyclerAdapter.updatePageNo(1)
+            productRecyclerAdapter.updatePageNo(Constants.PRODUCTS_PAGE)
 
         }
     }

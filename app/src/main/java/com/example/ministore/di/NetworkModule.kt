@@ -1,6 +1,7 @@
 package com.example.ministore.di
 
 import com.example.ministore.service.ProductService
+import com.example.ministore.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,7 +35,7 @@ class NetworkModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://desolate-shelf-18786.herokuapp.com")
+            .baseUrl(Constants.BASE_URL)
             .build()
     }
 

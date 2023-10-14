@@ -18,6 +18,7 @@ import com.example.ministore.databinding.FragmentCartBinding
 import com.example.ministore.model.Product
 import com.example.ministore.ui.CartManager
 import com.example.ministore.ui.ProductRecyclerAdapter
+import com.example.ministore.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,7 @@ import kotlinx.coroutines.withContext
 @AndroidEntryPoint
 class CartFragment: Fragment(R.layout.fragment_cart)  {
     private lateinit var binding: FragmentCartBinding
-    private lateinit var cartManager: CartManager
+    private lateinit var cartManager: CartManager // dao add/remove operations manager
     private val viewModel: CartViewModel by viewModels(ownerProducer = { this })
     private val cartRecyclerAdapter = ProductRecyclerAdapter()
 
@@ -49,7 +50,8 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
             val layoutManager = LinearLayoutManager(requireContext())
             binding.recycler.layoutManager = layoutManager
             binding.recycler.adapter = cartRecyclerAdapter
-            cartRecyclerAdapter.updatePageNo(2)
+            // same adapter was used for different pages
+            cartRecyclerAdapter.updatePageNo(Constants.CART_PAGE)
         }
     }
     override fun onStart(){
@@ -60,14 +62,15 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
     private fun listenViewModel() {
         viewModel.apply {
             liveDataProductList.observe(viewLifecycleOwner){
-                cartRecyclerAdapter.updateList(it)
+                cartRecyclerAdapter.updateList(it) //List of features of dao's products
+
+                // controlling visibilities depends on if dao is empty or not
                 binding.placeholder.visibility = if (it.isNotEmpty()) View.GONE else View.VISIBLE
                 binding.purchaseLayout.payButton.isEnabled = it.isNotEmpty()
                 binding.toolbarLayout.delete.isEnabled = it.isNotEmpty()
             }
             liveDataDaoList.observe(viewLifecycleOwner){
-                cartRecyclerAdapter.updateCartList(it)
-
+                cartRecyclerAdapter.updateCartList(it)  //List of dao's products and amounts
             }
             liveDataSum.observe(viewLifecycleOwner){
                 binding.purchaseLayout.price.text = it
@@ -76,13 +79,13 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
                 binding.loading.visibility = if (it) View.VISIBLE else View.GONE
                 binding.recycler.visibility = if (it) View.GONE else View.VISIBLE
             }
-            binding.toolbarLayout.close.setOnClickListener {
+            binding.toolbarLayout.close.setOnClickListener {// cart page close button listener
                 findNavController().popBackStack()
             }
-            binding.toolbarLayout.delete.setOnClickListener{
+            binding.toolbarLayout.delete.setOnClickListener{// cart page delete button listener
                 showDeleteButtonDialog()
             }
-            binding.purchaseLayout.payButton.setOnClickListener {
+            binding.purchaseLayout.payButton.setOnClickListener {// cart page payment button listener
                 checkoutCart()
                 paymentDialog()
 
@@ -114,14 +117,14 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
     }
 
 
-
+    // The user is asked again when deleting the cart.
     private fun showDeleteButtonDialog() {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
         val deleteDialog = inflater.inflate(R.layout.dialog_delete_button, null)
 
         builder.setView(deleteDialog)
-            .setPositiveButton("Evet") { dialog, _ ->
+            .setPositiveButton(Constants.DIALOG_YES) { dialog, _ ->
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         cartManager.deleteDao()
@@ -130,7 +133,7 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton("İptal") { dialog, _ ->
+            .setNegativeButton(Constants.DIALOG_CANCEL) { dialog, _ ->
                 dialog.dismiss()
             }
         CoroutineScope(Dispatchers.Main).launch {
@@ -140,7 +143,7 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
 
     }
 
-
+    //The response message returned from the API is printed on the screen.
     private fun paymentDialog() {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
@@ -148,7 +151,7 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
         val dialogText = paymentDialog.findViewById<TextView>(R.id.dialog)
         viewModel.liveDataResponse.observe(viewLifecycleOwner){
             dialogText.text = it
-            if(it.contains("başarılı")) {
+            if(it.contains(Constants.API_SUCCESS_CONDITION)) {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         cartManager.deleteDao()
@@ -158,7 +161,7 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
             }
         }
         builder.setView(paymentDialog)
-            .setPositiveButton("Tamam") { dialog, _ ->
+            .setPositiveButton(Constants.DIOLOG_OK) { dialog, _ ->
                 dialog.dismiss()
             }
         CoroutineScope(Dispatchers.Main).launch {

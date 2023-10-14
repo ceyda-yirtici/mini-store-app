@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ministore.R
 import com.example.ministore.model.Product
+import com.example.ministore.util.Constants
 import com.example.movieproject.room.CartProduct
 import java.util.Locale
 
-class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.ProductViewHolder>() {
+class ProductRecyclerAdapter: RecyclerView.Adapter<ProductRecyclerAdapter.ProductViewHolder>() {
 
     private var productList: ArrayList<Product> = arrayListOf()
     private var cartList: List<CartProduct> = listOf()
@@ -28,6 +29,7 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
         )
 
     }
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(item: List<Product>) {
         productList.clear()
         item.let {
@@ -40,6 +42,7 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
     fun updatePageNo(item:Int){
         page = item
     }
+    @SuppressLint("NotifyDataSetChanged")
     fun updateCartList(it: List<CartProduct>) {
         cartList = listOf()
         it.let {
@@ -81,13 +84,17 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
             val reduceProductAmount : TextView = itemView.findViewById(R.id.productReduce)
 
 
-            Glide.with(photo).load(product.imageUrl).into(photo)
+            Glide.with(photo).load(product.imageUrl).
+            placeholder(R.drawable.baseline_placeholder_24) // drawable as a placeholder
+                .error(R.drawable.baseline_placeholder_24).into(photo)
+
             name.text = product.name
 
             val amountOfProduct = cartList.find { it.product_id == product.id }?.amount ?: 0
-            if (page == 1) {
+            if (page == Constants.PRODUCTS_PAGE) {
 
-                price.text = product.currency + String.format(Locale.US, "%.2f", product.price)
+                // If any item present display +, - buttons and quantity if not only the plus button.
+                price.text = product.currency + String.format(Locale.US, Constants.PRICE_FORMAT, product.price)
                 if (amountOfProduct == 0) {
                     cartProductAmount.visibility = View.GONE
                     reduceProductAmount.visibility = View.GONE
@@ -97,7 +104,8 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
                 }
             }
             else {
-                price.text = product.currency + String.format(Locale.US, "%.2f",product.price*amountOfProduct)
+                price.text = product.currency +
+                        String.format(Locale.US, Constants.PRICE_FORMAT,product.price*amountOfProduct)
             }
             cartProductAmount.text = amountOfProduct.toString()
         }
@@ -107,7 +115,7 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         var layout: Int
-        if (page == 1)  layout = R.layout.item_product
+        if (page == Constants.PRODUCTS_PAGE)  layout = R.layout.item_product
         else layout = R.layout.item_cart_product
         val itemView = inflater.inflate(layout, parent, false)
         return ProductViewHolder(itemView)

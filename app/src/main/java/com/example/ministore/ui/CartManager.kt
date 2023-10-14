@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.example.ministore.R
 import com.example.ministore.databinding.ProductsToolbarCustomLayoutBinding
 import com.example.ministore.model.Product
+import com.example.ministore.util.Constants
 import com.example.movieproject.room.CartProduct
 import com.example.myapplication.room.CartProductDao
 import javax.inject.Singleton
@@ -24,7 +25,7 @@ class CartManager private constructor(private val productDao: CartProductDao) {
             return instance ?: synchronized(this) {
                 instance ?: CartManager(productDao).also { instance = it }
             }
-        }
+        }// singleton cart manager
     }
 
     fun updateToolbarCartView(toolbar: ProductsToolbarCustomLayoutBinding) {
@@ -37,7 +38,6 @@ class CartManager private constructor(private val productDao: CartProductDao) {
         context: Context?,
     ) {
         var currentAmount = productDao.getAmountById(product.id)
-        Log.d("adding", product.toString())
         if (product.stock > currentAmount) currentAmount += 1
         else{
             Handler(Looper.getMainLooper()).post {
@@ -45,7 +45,7 @@ class CartManager private constructor(private val productDao: CartProductDao) {
                 {
                     toast.cancel()
                 }
-                toast = Toast.makeText(context, "Şu anda stokta yok.", Toast.LENGTH_SHORT)
+                toast = Toast.makeText(context, Constants.CUSTOM_TOAST_MESSAGE, Toast.LENGTH_SHORT)
                 toast.show()
             }
             return
@@ -67,7 +67,6 @@ class CartManager private constructor(private val productDao: CartProductDao) {
     ) {
         var currentAmount = productDao.getAmountById(product.id)
         currentAmount -= 1
-        Log.d("removing", product.toString())
         if (currentAmount == 0) productDao.deleteById(productId = product.id)
         else productDao.updateAmount(productId = product.id, newAmount = currentAmount)
 

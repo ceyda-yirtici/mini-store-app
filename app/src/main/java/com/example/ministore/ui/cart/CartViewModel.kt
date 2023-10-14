@@ -87,8 +87,8 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    //post operation logic
     fun checkoutCart(){
-
         viewModelScope.launch(Dispatchers.IO) {
             val requestProducts = getProductDao().getAll().map { product ->
                 RequestProduct(
@@ -97,11 +97,12 @@ class CartViewModel @Inject constructor(
                 )
             }
             val requestBody = RequestProductList(products = requestProducts)
-            Log.e("check", getProductDao().getAll().toString())
             _liveDataResponse.postValue(productService.checkoutCart(requestBody).message)
         }
 
     }
+
+    // Due to the possibility of API values changing while on this screen, another fetch operation done for this screen.
     private fun callProductRepos() {
         liveDataLoading.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -114,7 +115,6 @@ class CartViewModel @Inject constructor(
                         localProduct.product_id == remoteProduct.id
                     }
                 }
-                Log.d("call", productList.toString())
                 _liveDataProductList.postValue(productList)
                 updateSumOfCart()
             } catch (exception: Exception) {
