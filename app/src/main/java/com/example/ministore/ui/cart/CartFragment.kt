@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -61,6 +62,8 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
             liveDataProductList.observe(viewLifecycleOwner){
                 cartRecyclerAdapter.updateList(it)
                 binding.placeholder.visibility = if (it.isNotEmpty()) View.GONE else View.VISIBLE
+                binding.purchaseLayout.payButton.isEnabled = it.isNotEmpty()
+                binding.toolbarLayout.delete.isEnabled = it.isNotEmpty()
             }
             liveDataDaoList.observe(viewLifecycleOwner){
                 cartRecyclerAdapter.updateCartList(it)
@@ -78,6 +81,11 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
             }
             binding.toolbarLayout.delete.setOnClickListener{
                 showDeleteButtonDialog()
+            }
+            binding.purchaseLayout.payButton.setOnClickListener {
+                checkoutCart()
+                paymentDialog()
+
             }
             cartRecyclerAdapter.setOnClickListener(object : ProductRecyclerAdapter.OnClickListener{
                 override fun onAddButtonClick(
@@ -105,7 +113,9 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
         }
     }
 
-    fun showDeleteButtonDialog() {
+
+
+    private fun showDeleteButtonDialog() {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
         val deleteDialog = inflater.inflate(R.layout.dialog_delete_button, null)
@@ -128,6 +138,32 @@ class CartFragment: Fragment(R.layout.fragment_cart)  {
         }
 
 
+    }
+
+
+    private fun paymentDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        val inflater = layoutInflater
+        val paymentDialog = inflater.inflate(R.layout.dialog_payment, null)
+        val dialogText = paymentDialog.findViewById<TextView>(R.id.dialog)
+        viewModel.liveDataResponse.observe(viewLifecycleOwner){
+            dialogText.text = it
+            if(it.contains("başarılı")) {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        cartManager.deleteDao()
+                        viewModel.updateDaoList()
+                    }
+                }
+            }
+        }
+        builder.setView(paymentDialog)
+            .setPositiveButton("Tamam") { dialog, _ ->
+                dialog.dismiss()
+            }
+        CoroutineScope(Dispatchers.Main).launch {
+            builder.show()
+        }
     }
 
 

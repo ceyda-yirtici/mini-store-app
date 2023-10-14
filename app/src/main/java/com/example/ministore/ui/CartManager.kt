@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CartManager private constructor(private val productDao: CartProductDao) {
-
+    private lateinit var toast: Toast
     companion object {
         @Volatile
         private var instance: CartManager? = null
@@ -41,11 +41,17 @@ class CartManager private constructor(private val productDao: CartProductDao) {
         if (product.stock > currentAmount) currentAmount += 1
         else{
             Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, "Şu anda stokta yok.", Toast.LENGTH_SHORT).show() }
+                if (this::toast.isInitialized)
+                {
+                    toast.cancel()
+                }
+                toast = Toast.makeText(context, "Şu anda stokta yok.", Toast.LENGTH_SHORT)
+                toast.show()
+            }
             return
         }
         if(currentAmount == 1) {
-            val cartProduct: CartProduct =
+            val cartProduct =
                 CartProduct(product_id = product.id, amount = currentAmount)
             productDao.insert(cartProduct)
         }

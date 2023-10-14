@@ -34,6 +34,7 @@ class ProductsViewModel  @Inject constructor(
 
 
     init {
+
         callProductRepos()
         val database = AppDatabaseProvider.getAppDatabase(application)
         productDao = database.productDao()

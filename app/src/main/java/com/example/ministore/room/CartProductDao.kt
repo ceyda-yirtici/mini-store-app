@@ -15,18 +15,18 @@ interface CartProductDao {
 
 
 
-    @Query("SELECT * FROM cart_table WHERE product_id = :productId")
+    @Query("SELECT * FROM cart_table WHERE id = :productId")
     fun get(productId:String): CartProduct?
 
 
 
-    @Query("SELECT COUNT(*) FROM cart_table WHERE product_id = :productId")
+    @Query("SELECT COUNT(*) FROM cart_table WHERE id = :productId")
     fun getCountById(productId: String): Int
 
-    @Query("UPDATE cart_table SET amount = :newAmount WHERE product_id = :productId")
+    @Query("UPDATE cart_table SET amount = :newAmount WHERE id = :productId")
     fun updateAmount(productId: String, newAmount: Int)
 
-    @Query("SELECT amount FROM cart_table WHERE product_id = :productId")
+    @Query("SELECT amount FROM cart_table WHERE id = :productId")
     fun getAmountById(productId: String): Int
 
     @Query("SELECT COUNT(*) FROM cart_table")
@@ -40,7 +40,7 @@ interface CartProductDao {
 
     @Insert
     fun insertAll(products: List<CartProduct>)
-    @Query("DELETE FROM cart_table WHERE product_id = :productId")
+    @Query("DELETE FROM cart_table WHERE id = :productId")
     fun deleteById(productId: String)
 
     @Query("DELETE FROM cart_table")

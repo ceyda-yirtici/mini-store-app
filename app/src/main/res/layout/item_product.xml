@@ -29,30 +29,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginStart="3dp"
         android:backgroundTint="@color/white"
         android:textSize="16sp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textAlignment="center"
-        android:scaleType="centerCrop"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/photoGrid"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textSize="16sp"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:textAlignment="center"
-        android:scaleType="centerCrop"
+        android:layout_marginStart="3dp"
+        android:textSize="15sp"
+        android:maxLines="1"
         android:textStyle="normal"
         app:layout_constraintTop_toBottomOf="@+id/price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

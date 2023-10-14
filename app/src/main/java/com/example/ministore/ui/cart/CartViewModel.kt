@@ -1,12 +1,16 @@
 package com.example.ministore.ui.cart
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ministore.model.CheckoutResponse
 import com.example.ministore.model.Product
+import com.example.ministore.model.RequestProduct
+import com.example.ministore.model.RequestProductList
 import com.example.ministore.service.ProductService
 import com.example.movieproject.room.AppDatabaseProvider
 import com.example.movieproject.room.CartProduct
@@ -38,6 +42,9 @@ class CartViewModel @Inject constructor(
     private val _liveDataSum = MutableLiveData<String>()
     val liveDataSum: LiveData<String> = _liveDataSum
 
+    private val _liveDataResponse = MutableLiveData<String>()
+    val liveDataResponse: LiveData<String> = _liveDataResponse
+
     init {
         val database = AppDatabaseProvider.getAppDatabase(application)
         productDao = database.productDao()
@@ -66,6 +73,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
+     @SuppressLint("SuspiciousIndentation")
      fun updateSumOfCart()  {
         var sum = 0.0
             viewModelScope.launch(Dispatchers.IO) {
@@ -79,7 +87,21 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    fun checkoutCart(){
 
+        viewModelScope.launch(Dispatchers.IO) {
+            val requestProducts = getProductDao().getAll().map { product ->
+                RequestProduct(
+                    id = product.product_id,
+                    amount = product.amount
+                )
+            }
+            val requestBody = RequestProductList(products = requestProducts)
+            Log.e("check", getProductDao().getAll().toString())
+            _liveDataResponse.postValue(productService.checkoutCart(requestBody).message)
+        }
+
+    }
     private fun callProductRepos() {
         liveDataLoading.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
