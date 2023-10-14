@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="deleteButton">#9F0E0E</color>
+    <color name="closeCartButton">#1A5FB5</color>
 </resources>

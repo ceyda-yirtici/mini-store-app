@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">Mini Store</string>
+    <string name="app_name">Mini Bakkal</string>
+    <string name="deleteButton">Sil</string>
+    <string name="closeCartButton">Kapat</string>
+    <string name="cartTitle">Sepet</string>
 </resources>
