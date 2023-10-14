@@ -1,5 +1,6 @@
 package com.example.myapplication.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -15,26 +16,32 @@ interface CartProductDao {
 
 
     @Query("SELECT * FROM cart_table WHERE product_id = :productId")
-    fun get(productId:Int): CartProduct
+    fun get(productId:String): CartProduct
 
 
-    @Query("SELECT * FROM cart_table WHERE product_id IN (:productIds)")
-    suspend fun loadAllByIds(productIds: IntArray): List<CartProduct>
 
     @Query("SELECT COUNT(*) FROM cart_table WHERE product_id = :productId")
-    fun getCountById(productId: Int): Int
+    fun getCountById(productId: String): Int
+
+    @Query("UPDATE cart_table SET amount = :newAmount WHERE product_id = :productId")
+    fun updateAmount(productId: String, newAmount: Int)
+
+    @Query("SELECT amount FROM cart_table WHERE product_id = :productId")
+    fun getAmountById(productId: String): Int
 
     @Query("SELECT COUNT(*) FROM cart_table")
     fun getCount(): Int
+
+    @Query("SELECT SUM(amount) FROM cart_table")
+    fun getSumOfAmounts(): Int
 
     @Insert
     fun insert(movie: CartProduct)
 
     @Insert
     fun insertAll(products: List<CartProduct>)
-
-    @Delete
-    fun delete(product: CartProduct)
+    @Query("DELETE FROM cart_table WHERE product_id = :productId")
+    fun deleteById(productId: String)
 
     @Query("DELETE FROM cart_table")
      fun deleteAllProducts()

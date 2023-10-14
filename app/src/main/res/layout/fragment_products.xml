@@ -18,7 +18,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <include layout="@layout/home_toolbar_custom_layout" />
+        <include layout="@layout/products_toolbar_custom_layout" />
 
 
     </androidx.appcompat.widget.Toolbar>
