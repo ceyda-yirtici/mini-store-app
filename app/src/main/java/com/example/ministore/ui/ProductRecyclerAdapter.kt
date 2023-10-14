@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.ministore.R
 import com.example.ministore.model.Product
 import com.example.movieproject.room.CartProduct
+import java.util.Locale
 
 class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.ProductViewHolder>() {
 
@@ -86,7 +87,7 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
             val amountOfProduct = cartList.find { it.product_id == product.id }?.amount ?: 0
             if (page == 1) {
 
-                price.text = product.currency + product.price
+                price.text = product.currency + String.format(Locale.US, "%.2f", product.price)
                 if (amountOfProduct == 0) {
                     cartProductAmount.visibility = View.GONE
                     reduceProductAmount.visibility = View.GONE
@@ -96,9 +97,8 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
                 }
             }
             else {
-                price.text = product.currency + (product.price*amountOfProduct)
+                price.text = product.currency + String.format(Locale.US, "%.2f",product.price*amountOfProduct)
             }
-
             cartProductAmount.text = amountOfProduct.toString()
         }
 

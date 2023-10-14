@@ -4,7 +4,7 @@
     tools:ignore="ExtraText">
     <stroke
         android:width="2dp"
-    android:color="#595959"
+    android:color="#656565"
         />
 
     <solid android:color="#DCDCDC" />

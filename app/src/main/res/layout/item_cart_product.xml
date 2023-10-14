@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
+
+
     <ImageView
         android:id="@+id/photoGrid"
         android:layout_width="100dp"
@@ -16,12 +18,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="50dp"
         android:textSize="16sp"
         android:maxLines="2"
         android:layout_margin="10dp"
@@ -37,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:layout_marginBottom="50dp"
         android:backgroundTint="@color/white"
         android:textSize="16sp"
         android:maxLines="1"
@@ -57,6 +59,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="wrap_content" />
+
+
+    <ImageView
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/frame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

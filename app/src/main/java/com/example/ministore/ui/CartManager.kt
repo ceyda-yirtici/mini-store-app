@@ -4,11 +4,10 @@ import android.util.Log
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import com.example.ministore.R
+import com.example.ministore.databinding.ProductsToolbarCustomLayoutBinding
 import com.example.ministore.model.Product
 import com.example.movieproject.room.CartProduct
 import com.example.myapplication.room.CartProductDao
@@ -28,8 +27,8 @@ class CartManager private constructor(private val productDao: CartProductDao) {
         }
     }
 
-    fun updateToolbarCartView(toolbar: Toolbar) {
-        val cartAmountIcon = toolbar.findViewById<TextView>(R.id.amountOfAllProducts)
+    fun updateToolbarCartView(toolbar: ProductsToolbarCustomLayoutBinding) {
+        val cartAmountIcon = toolbar.amountOfAllProducts
         val count = productDao.getSumOfAmounts()
         cartAmountIcon.text = count.toString()
     }

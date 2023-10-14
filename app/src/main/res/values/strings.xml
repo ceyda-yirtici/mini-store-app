@@ -3,4 +3,8 @@
     <string name="deleteButton">Sil</string>
     <string name="closeCartButton">Kapat</string>
     <string name="cartTitle">Sepet</string>
+    <string name="delete_button_dialog">Sepeti boşaltmak istediğinizden emin misiniz?</string>
+    <string name="sum_title">Toplam:</string>
+    <string name="payButton">Sepeti Onayla</string>
+    <string name="currency_tr">₺</string>
 </resources>

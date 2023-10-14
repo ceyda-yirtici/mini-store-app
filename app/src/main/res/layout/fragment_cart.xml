@@ -12,13 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
+        android:background="@color/toolbar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <include layout="@layout/cart_toolbar_custom_layout" />
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/cart_toolbar_custom_layout" />
 
 
     </androidx.appcompat.widget.Toolbar>
@@ -28,11 +31,33 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/purchase_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         />
+
+    <ImageView
+        android:id="@+id/placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/placeholder_of_cart_page"
+        app:layout_constraintBottom_toBottomOf="@id/purchase_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+
+    <include
+        android:id="@+id/purchase_layout"
+        layout="@layout/purchase_products_layout"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ProgressBar
         android:id="@+id/loading"

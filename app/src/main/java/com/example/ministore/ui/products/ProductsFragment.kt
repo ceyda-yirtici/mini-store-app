@@ -13,11 +13,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ministore.R
 import com.example.ministore.databinding.FragmentProductsBinding
-import com.example.ministore.databinding.ProductsToolbarCustomLayoutBinding
 import com.example.ministore.model.Product
 import com.example.ministore.ui.CartManager
 import com.example.ministore.ui.ProductRecyclerAdapter
-import com.example.ministore.ui.cart.CartFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,7 +63,7 @@ class ProductsFragment: Fragment(R.layout.fragment_products)  {
     private fun listenViewModel() {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                cartManager.updateToolbarCartView(binding.toolbar)
+                cartManager.updateToolbarCartView(binding.toolbarLayout)
             }
         }
         viewModel.apply {
@@ -79,7 +77,7 @@ class ProductsFragment: Fragment(R.layout.fragment_products)  {
                 binding.loading.visibility = if (it) View.VISIBLE else View.GONE
                 binding.recycler.visibility = if (it) View.GONE else View.VISIBLE
             }
-            binding.toolbar.findViewById<ImageButton>(R.id.cart).setOnClickListener {
+            binding.toolbarLayout.cart.setOnClickListener {
                 findNavController().navigate(R.id.action_cart)
             }
             productRecyclerAdapter.setOnClickListener(object : ProductRecyclerAdapter.OnClickListener{
@@ -91,7 +89,7 @@ class ProductsFragment: Fragment(R.layout.fragment_products)  {
                         withContext(Dispatchers.IO) {
                             cartManager.addProductToDB(product, context)
                             viewModel.updateDaoList()
-                            cartManager.updateToolbarCartView(binding.toolbar)
+                            cartManager.updateToolbarCartView(binding.toolbarLayout)
                         }
                     }
                 }
@@ -103,7 +101,7 @@ class ProductsFragment: Fragment(R.layout.fragment_products)  {
                         withContext(Dispatchers.IO) {
                             cartManager.reduceProductFromDB(product)
                             viewModel.updateDaoList()
-                            cartManager.updateToolbarCartView(binding.toolbar)
+                            cartManager.updateToolbarCartView(binding.toolbarLayout)
                         }
                     }
                 }

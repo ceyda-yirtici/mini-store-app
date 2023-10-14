@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="frame">#A3A3A3</color>
+    <color name="toolbar">#F4F4F4</color>
+    <color name="purchase">#D3EBFF</color>
     <color name="deleteButton">#9F0E0E</color>
     <color name="closeCartButton">#1A5FB5</color>
+
+    <color name="payButton">#15598F</color>
 </resources>

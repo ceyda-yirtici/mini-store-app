@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,24 +24,26 @@ class CartViewModel @Inject constructor(
 )
     : ViewModel() {
 
-
     private val productDao: CartProductDao
-
 
     val liveDataLoading = MutableLiveData<Boolean>()
 
     private val _liveDataDaoList = MutableLiveData<List<CartProduct>>()
     val liveDataDaoList : LiveData<List<CartProduct>> = _liveDataDaoList
 
-
     private val _liveDataProductList = MutableLiveData<List<Product>>()
     val liveDataProductList: LiveData<List<Product>> = _liveDataProductList
+
+
+    private val _liveDataSum = MutableLiveData<String>()
+    val liveDataSum: LiveData<String> = _liveDataSum
 
     init {
         val database = AppDatabaseProvider.getAppDatabase(application)
         productDao = database.productDao()
-        updateDaoList()
+
         callProductRepos()
+        updateDaoList()
     }
 
     fun getProductDao(): CartProductDao {
@@ -59,8 +62,21 @@ class CartViewModel @Inject constructor(
                 }
             }
             _liveDataProductList.postValue(productList ?: emptyList())
+            updateSumOfCart()
         }
+    }
 
+     fun updateSumOfCart()  {
+        var sum = 0.0
+            viewModelScope.launch(Dispatchers.IO) {
+            for (product in getProductDao().getAll()) {
+                val price =
+                    liveDataProductList.value?.find { it.id == product.product_id }?.price ?: 0.0
+                sum += price*product.amount
+            }
+            _liveDataSum.postValue(String.format(Locale.US, "%.2f", sum))
+
+        }
     }
 
 
@@ -78,6 +94,7 @@ class CartViewModel @Inject constructor(
                 }
                 Log.d("call", productList.toString())
                 _liveDataProductList.postValue(productList)
+                updateSumOfCart()
             } catch (exception: Exception) {
                 _liveDataProductList.postValue(emptyList())
             } finally {
@@ -85,10 +102,5 @@ class CartViewModel @Inject constructor(
             }
         }
     }
-
-
-
-
-
 
 }

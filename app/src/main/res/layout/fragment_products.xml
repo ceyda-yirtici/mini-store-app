@@ -12,13 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
+        android:background="@color/toolbar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <include layout="@layout/products_toolbar_custom_layout" />
+        <include
+
+            android:id="@+id/toolbar_layout"
+            layout="@layout/products_toolbar_custom_layout" />
 
 
     </androidx.appcompat.widget.Toolbar>
@@ -26,6 +30,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/recycler"
+        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
