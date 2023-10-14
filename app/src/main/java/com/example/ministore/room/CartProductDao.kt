@@ -16,7 +16,7 @@ interface CartProductDao {
 
 
     @Query("SELECT * FROM cart_table WHERE product_id = :productId")
-    fun get(productId:String): CartProduct
+    fun get(productId:String): CartProduct?
 
 
 

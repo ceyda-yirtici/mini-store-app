@@ -51,6 +51,7 @@ class ProductsFragment: Fragment(R.layout.fragment_products)  {
             val layoutManager: LinearLayoutManager? = GridLayoutManager(requireContext(), 3)
             binding.recycler.layoutManager = layoutManager
             binding.recycler.adapter = productRecyclerAdapter
+            productRecyclerAdapter.updatePageNo(1)
 
         }
     }

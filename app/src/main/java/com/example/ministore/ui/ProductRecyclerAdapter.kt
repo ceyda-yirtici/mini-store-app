@@ -16,6 +16,7 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
 
     private var productList: ArrayList<Product> = arrayListOf()
     private var cartList: List<CartProduct> = listOf()
+    private var page: Int = 1
     private lateinit var listener: OnClickListener
     interface OnClickListener {
         fun onAddButtonClick(
@@ -35,7 +36,9 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
 
     }
 
-
+    fun updatePageNo(item:Int){
+        page = item
+    }
     fun updateCartList(it: List<CartProduct>) {
         cartList = listOf()
         it.let {
@@ -79,18 +82,23 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
 
             Glide.with(photo).load(product.imageUrl).into(photo)
             name.text = product.name
-            price.text = product.currency + product.price
 
-            val amountOfProduct =  cartList.find { it.product_id == product.id }?.amount
+            val amountOfProduct = cartList.find { it.product_id == product.id }?.amount ?: 0
+            if (page == 1) {
 
-            if (amountOfProduct == 0 || amountOfProduct == null) {
-                cartProductAmount.visibility = View.GONE
-                reduceProductAmount.visibility = View.GONE
+                price.text = product.currency + product.price
+                if (amountOfProduct == 0) {
+                    cartProductAmount.visibility = View.GONE
+                    reduceProductAmount.visibility = View.GONE
+                } else {
+                    cartProductAmount.visibility = View.VISIBLE
+                    reduceProductAmount.visibility = View.VISIBLE
+                }
             }
             else {
-                cartProductAmount.visibility = View.VISIBLE
-                reduceProductAmount.visibility = View.VISIBLE
+                price.text = product.currency + (product.price*amountOfProduct)
             }
+
             cartProductAmount.text = amountOfProduct.toString()
         }
 
@@ -98,7 +106,10 @@ class ProductRecyclerAdapter() : RecyclerView.Adapter<ProductRecyclerAdapter.Pro
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemView = inflater.inflate(R.layout.item_product, parent, false)
+        var layout: Int
+        if (page == 1)  layout = R.layout.item_product
+        else layout = R.layout.item_cart_product
+        val itemView = inflater.inflate(layout, parent, false)
         return ProductViewHolder(itemView)
     }
 

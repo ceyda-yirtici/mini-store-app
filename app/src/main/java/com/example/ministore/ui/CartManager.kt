@@ -70,4 +70,8 @@ class CartManager private constructor(private val productDao: CartProductDao) {
 
     }
 
+    fun deleteDao() {
+        productDao.deleteAllProducts()
+    }
+
 }

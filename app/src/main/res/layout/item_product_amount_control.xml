@@ -1,0 +1,37 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="27dp"
+    android:orientation="horizontal"
+    android:gravity="end">
+
+    <TextView
+        android:id="@+id/productReduce"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:text="-"
+        android:textAlignment="center"
+        android:background="@drawable/product_amount_frame"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/cartProductAmount"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:background="@drawable/product_amount_frame"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/productAdd"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:text="+"
+        android:background="@drawable/product_amount_frame"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+</LinearLayout>

@@ -61,6 +61,7 @@ class ProductsViewModel  @Inject constructor(
             } catch (exception: Exception) {
                 emptyList()
             }
+
             _liveDataProductList.postValue(productList)
             liveDataLoading.postValue(false)
         }

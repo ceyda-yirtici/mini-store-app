@@ -1,6 +1,7 @@
 package com.example.ministore.ui.cart
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,11 +14,12 @@ import com.example.myapplication.room.CartProductDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val movieService: ProductService, application: Application
+    private val productService: ProductService, application: Application
 )
     : ViewModel() {
 
@@ -30,10 +32,15 @@ class CartViewModel @Inject constructor(
     private val _liveDataDaoList = MutableLiveData<List<CartProduct>>()
     val liveDataDaoList : LiveData<List<CartProduct>> = _liveDataDaoList
 
+
+    private val _liveDataProductList = MutableLiveData<List<Product>>()
+    val liveDataProductList: LiveData<List<Product>> = _liveDataProductList
+
     init {
         val database = AppDatabaseProvider.getAppDatabase(application)
         productDao = database.productDao()
         updateDaoList()
+        callProductRepos()
     }
 
     fun getProductDao(): CartProductDao {
@@ -41,11 +48,47 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateDaoList(){
-
         viewModelScope.launch(Dispatchers.IO) {
-            _liveDataDaoList.postValue(productDao.getAll())
+
+            val localProducts = productDao.getAll()
+            _liveDataDaoList.postValue(localProducts)
+
+            val productList = liveDataProductList.value?.filter { remoteProduct ->
+                localProducts.any { localProduct ->
+                    localProduct.product_id == remoteProduct.id
+                }
+            }
+            _liveDataProductList.postValue(productList ?: emptyList())
+        }
+
+    }
+
+
+    private fun callProductRepos() {
+        liveDataLoading.postValue(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val remoteProducts = productService.getProducts()
+                val localProducts = productDao.getAll()
+
+                val productList = remoteProducts.filter { remoteProduct ->
+                    localProducts.any { localProduct ->
+                        localProduct.product_id == remoteProduct.id
+                    }
+                }
+                Log.d("call", productList.toString())
+                _liveDataProductList.postValue(productList)
+            } catch (exception: Exception) {
+                _liveDataProductList.postValue(emptyList())
+            } finally {
+                liveDataLoading.postValue(false)
+            }
         }
     }
+
+
+
+
 
 
 }
